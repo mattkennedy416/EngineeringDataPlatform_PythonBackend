@@ -1,0 +1,102 @@
+{
+  "custom_code.python": [
+    {
+      "func_name": "python_funcRef_from_config",
+      "tag": "custom_code.python",
+      "config_params": "[('func', 'required', 'python function ref', def myCustomFunction(config, prev_step_output):\\n    return prev_step_output['a']*2\\nmyCustomFunction)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Allow a reference to a python function to be passed in through a config",
+      "working_example": "\"\""
+    },
+    {
+      "func_name": "python_funcStr_from_config",
+      "tag": "custom_code.python",
+      "config_params": "[(funcStr), (funcName)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Allow a string of a python function to be passed in through a config",
+      "working_example": "\"\""
+    }
+  ],
+  "tables.columns": [
+    {
+      "func_name": "column_names_replace",
+      "tag": "tables.columns",
+      "config_params": "[(values), (inplace)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Replace the column names in a Table or pd.DataFrame with a list of new values",
+      "working_example": "\"\""
+    },
+    {
+      "func_name": "column_names_strmodify",
+      "tag": "tables.columns",
+      "config_params": "[(values), (inplace)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Modify the column names by passing in string manipulation code that will be individually applied to each column",
+      "working_example": "\".replace('<', '').replace('>', '').strip()\""
+    },
+    {
+      "func_name": "column_names_funcmodify",
+      "tag": "tables.columns",
+      "config_params": "[(func), (inplace)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Modify the column names by passing in a function that will be individually applied to each item",
+      "working_example": "\"\""
+    },
+    {
+      "func_name": "run_subsequent_pipeline_per_item",
+      "tag": "tables.columns",
+      "config_params": "[]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "When we split one table/dataframe into many tables/dataframes, we may want to run subsequent transforms and loads PER TABLE rather than defining new transforms and loads that appropriately can process multiple tables",
+      "working_example": "\"\""
+    }
+  ],
+  "tables.filter": [
+    {
+      "func_name": "split_by_categorical_col_value",
+      "tag": "tables.filter",
+      "config_params": "[(col)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Split a large dataframe or table into a list of many dataframes based on a single column of categorical values eg - stock market data with 20 tickers combined into a single source, lets split them into 20 sources",
+      "working_example": "\"\""
+    },
+    {
+      "func_name": "filter_list_by_func",
+      "tag": "tables.filter",
+      "config_params": "[(func)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Filter a list of objects by some function that takes the object as an input and returns a True or False",
+      "working_example": "\"\""
+    }
+  ],
+  "tables.sampling": [
+    {
+      "func_name": "take_sample_from_list",
+      "tag": "tables.sampling",
+      "config_params": "[(sample_method), (sample_num), (random_seed)]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Down-select a large list of objects to a small list of objects for inspection or testing",
+      "working_example": "\"\""
+    }
+  ],
+  "workspace.commit": [
+    {
+      "func_name": "commit_to_workspace_db",
+      "tag": "workspace.commit",
+      "config_params": "[(if_exists, default='replace', str, {'fail','replace','append'}), (table_name_method, required, str, {'func', 'str', 'dict', 'preinitialized'})]",
+      "valid_input": "[any]",
+      "valid_output": "[any]",
+      "description": "Commit the input to the workspace database.",
+      "working_example": "\"\""
+    }
+  ]
+}
