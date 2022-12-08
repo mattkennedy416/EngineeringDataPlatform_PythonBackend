@@ -11,11 +11,14 @@ import queue
 from jupyter_client.manager import start_new_kernel
 from pprint import PrettyPrinter
 
+
 from CodeExecution.RuntimeTest import RuntimeTest
 
+from EngineeringDataPlatform import workspace
 
+localProjectSpace = "~/Documents/EngineeringDataPlatform/ProjectSpace/"
 
-
+project = workspace.Project(localProjectSpace, 'testProject')
 
 
 runtime = RuntimeTest()
@@ -132,17 +135,20 @@ def WorkspaceNotebookFiles():
     # filename = request.json.get('filename', None)
     # cells = request.json.get('cells', [])
 
+    filename = request.json.get('notebookFilename')
 
-    # lets do a read all cells operation:
-    content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
-                'cellType': 'code',
-                'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
-                'cellContent': 'a=5\nb=6\na+b'},
-               {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
-                'cellType': 'code',
-                'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
-                'cellContent': 'print("hello world! I am a second cell!")'}
-               ]
+    content = project.ReadNotebook(filename)
+
+    # # lets do a read all cells operation:
+    # content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
+    #             'cellType': 'code',
+    #             'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
+    #             'cellContent': 'a=5\nb=6\na+b'},
+    #            {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
+    #             'cellType': 'code',
+    #             'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
+    #             'cellContent': 'print("hello world! I am a second cell!")'}
+    #            ]
 
 
     return jsonify(content)
