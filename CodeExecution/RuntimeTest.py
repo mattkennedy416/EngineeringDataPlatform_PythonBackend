@@ -90,9 +90,11 @@ class RuntimeTest:
         interpreter_response = self._execute_code_blocking(interpreter_id, code)
 
         if not ('msg_type' in interpreter_response['info'] and interpreter_response['info']['msg_type'] == 'error'):
-            self._get_defined_variables(interpreter_id)
+            envVariables = self._get_defined_variables(interpreter_id)
+        else:
+            envVariables = None
 
-        return interpreter_response
+        return interpreter_response, envVariables
 
 
     def ETL_Load_CSV(self, config):

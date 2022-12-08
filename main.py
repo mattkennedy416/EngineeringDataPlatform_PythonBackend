@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import json
 import os
 from flask_cors import CORS
@@ -37,12 +37,13 @@ def hello_world():
         code = content['code']
         if isinstance(code, list): # coming from javascript we get [str] rather than str
             code = ' '.join(code) # it'll pass spaces as different parameters
-        interpreter_response = runtime.Execute(code)
+        interpreter_response, environmentVariables = runtime.Execute(code)
     else:
-        interpreter_response = "no code parameter received"
+
+        interpreter_response, environmentVariables = "no code parameter received", None
 
 
-    queryResponse = {'type': 'text/plain',
+    queryResponse = {'type': 'json',
                      'status': {'state': 'success',
                                 'msg': ''},
                      'output': ''}
@@ -54,7 +55,11 @@ def hello_world():
     if interpreter_response['data'] is not None and 'text/plain' in interpreter_response['data']:
         queryResponse['output'] = interpreter_response['data']['text/plain']
 
-    return json.dumps(queryResponse)
+    # we can probably figure out how to send back only what's changed
+    queryResponse['environment'] = environmentVariables
+
+    #return json.dumps(queryResponse)
+    return jsonify(queryResponse)
 
 #
 @app.route("/repo_dir/", methods=['POST', 'GET'])
@@ -106,6 +111,41 @@ def etl_load_csv():
     return 'loaded'
 
 
+@app.route('/workspace/hello', methods=['POST'])
+def WorkspaceHelloWorld():
+    """
+    can we ping the backend workspace services?
+    """
+
+    return {'message': 'hello!'}
+
+
+@app.route('/workspace/notebooks', methods=['POST', 'GET'])
+def WorkspaceNotebookFiles():
+    """
+    Workspace Notebook File operations such as reading, writing, searching, permissions, and more
+
+    This is not executing code within notebooks.
+    """
+
+    # workspace = request.json.get('workspace', None)
+    # filename = request.json.get('filename', None)
+    # cells = request.json.get('cells', [])
+
+
+    # lets do a read all cells operation:
+    content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
+                'cellType': 'code',
+                'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
+                'cellContent': 'hello world!'},
+               {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
+                'cellType': 'code',
+                'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
+                'cellContent': 'hello world! I am a second cell!'}
+               ]
+
+
+    return jsonify(content)
 
 
 
