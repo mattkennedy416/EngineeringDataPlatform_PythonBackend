@@ -137,11 +137,11 @@ def WorkspaceNotebookFiles():
     content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
                 'cellType': 'code',
                 'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
-                'cellContent': 'hello world!'},
+                'cellContent': 'a=5\nb=6\na+b'},
                {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
                 'cellType': 'code',
                 'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
-                'cellContent': 'hello world! I am a second cell!'}
+                'cellContent': 'print("hello world! I am a second cell!")'}
                ]
 
 
