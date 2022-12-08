@@ -140,15 +140,7 @@ def WorkspaceNotebookFiles():
     content = project.ReadNotebook(filename)
 
     # # lets do a read all cells operation:
-    # content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
-    #             'cellType': 'code',
-    #             'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
-    #             'cellContent': 'a=5\nb=6\na+b'},
-    #            {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
-    #             'cellType': 'code',
-    #             'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
-    #             'cellContent': 'print("hello world! I am a second cell!")'}
-    #            ]
+
 
 
     return jsonify(content)

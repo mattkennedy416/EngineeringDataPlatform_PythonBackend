@@ -32,6 +32,20 @@ class Project:
         os.mkdir(self.notebookDir)
         os.mkdir(self.pipelinesDir)
 
+        self._createTestFiles()
+    def _createTestFiles(self):
+
+        ## notebook:
+        content = [{'cellID': 'myWorkspace.myNotebookName.jfhfi4836',
+                    'cellType': 'code',
+                    'cellSyntax': 'python', # or Markdown, SQL, etc - little more generic than "language"
+                    'cellContent': 'a=5\nb=6\na+b'},
+                   {'cellID': 'myWorkspace.myNotebookName.fkao33k4n6',
+                    'cellType': 'code',
+                    'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
+                    'cellContent': 'print("hello world! I am a second cell!")'}
+                   ]
+        self.WriteNotebook('testNotebook.edpnb', content)
 
     def ReadNotebook(self, notebookFilename):
 
