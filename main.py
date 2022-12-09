@@ -13,6 +13,7 @@ from pprint import PrettyPrinter
 
 
 from CodeExecution.RuntimeTest import RuntimeTest
+from EngineeringDataPlatform.codingUtilities.notebookCellParser import NotebookCellParser
 
 from EngineeringDataPlatform import workspace
 
@@ -41,6 +42,11 @@ def hello_world():
         if isinstance(code, list): # coming from javascript we get [str] rather than str
             code = ' '.join(code) # it'll pass spaces as different parameters
         interpreter_response, environmentVariables = runtime.Execute(code)
+
+        parseForAdditionalInfo = NotebookCellParser(code)
+        for symbol in parseForAdditionalInfo.symbols:
+            if symbol in environmentVariables: # so we seem to have lost our type data here... that's a problem
+                pass
     else:
 
         interpreter_response, environmentVariables = "no code parameter received", None
@@ -135,16 +141,22 @@ def WorkspaceNotebookFiles():
     # filename = request.json.get('filename', None)
     # cells = request.json.get('cells', [])
 
-    filename = request.json.get('notebookFilename')
 
-    content = project.ReadNotebook(filename)
+    if request.method == 'GET':
+        filename = request.args.get('notebookFilename')
 
-    # # lets do a read all cells operation:
+        content = project.ReadNotebook(filename)
 
+        # # lets do a read all cells operation:
 
+        return jsonify(content)
 
-    return jsonify(content)
+    elif request.method == 'POST':
+        filename = request.json.get('notebookFilename')
+        content = request.json.get('content')
+        project.WriteNotebook(filename, content)
 
+        return 'success'
 
 
 

@@ -6,6 +6,7 @@ so that we can start getting persistent files.
 
 import os
 import json
+from flask import jsonify
 class Project:
 
     def __init__(self, localProjectSpaceDir, projectName):
