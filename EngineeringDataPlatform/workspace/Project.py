@@ -30,6 +30,8 @@ class Project:
 
         self.loadedNotebooks = {}
 
+    def pathInProjecttoAbsolutePath(self, pathInProject):
+        return os.path.join(self.projectDir, pathInProject)
     def name(self):
         return self.projectName
     def _createEmptyProject(self):
@@ -56,31 +58,52 @@ class Project:
                                     'cellSyntax': 'python',  # or Markdown, SQL, etc - little more generic than "language"
                                     'cellContent': 'print("hello world! I am a second cell!")'}
                    ]}
-        self.WriteNotebook('testNotebook.edpnb', content)
+        self.NotebookSaveOrSaveAs('testNotebook.edpnb', 'testNotebook', content)
 
-    def ReadNotebook(self, notebookFilename):
+    def NotebookRead(self, pathInProject):
 
-        path = os.path.join(self.notebookDir, notebookFilename)
-        with open(path, 'r') as f:
+        #path = os.path.join(self.notebookDir, notebookFilename)
+        absPath = self.pathInProjecttoAbsolutePath(pathInProject)
+        with open(absPath, 'r') as f:
             notebookContents = json.load(f)
 
-        nb = Notebook(self, notebookContents)
+        nb = Notebook(self, notebookContents, pathInProject=pathInProject)
         self.loadedNotebooks[nb.notebookName] = nb
 
         return nb
 
+    def NotebookRename(self, previousName, newName):
+        pass
 
-    def WriteNotebook(self, notebookFilename, content):
-
-        path = os.path.join(self.notebookDir, notebookFilename)
-        with open(path, 'w') as f:
-            json.dump(content, f, indent=2)
-
-
-    def WriteCell(self, notebookFilename, cellNum, cellContent):
+    def NotebookSaveOrSaveAs(self, pathOnDisk, name, content):
         """
-        Only write back a single cell
+        update the content of an existing notebook, or figure out where it's going if we're saving it somewhere else
         """
+
+        if name in self.loadedNotebooks and self.loadedNotebooks[name].pathInProject == pathOnDisk:
+            self.NotebookSave(name, content)
+
+        else:
+            raise NotImplementedError('saving to new paths not implemented yet')
+
+    def NotebookSave(self, name, content):
+        # do we presumably already have this notebook loaded?
+        # we could have changed the name though
+        # no lets assume this is just a basic SAVE operation
+        self.loadedNotebooks[name].updateContent(content)
+        self.loadedNotebooks[name].save()
+
+    # def WriteNotebook(self, notebookFilename, content):
+    #
+    #     path = os.path.join(self.notebookDir, notebookFilename)
+    #     with open(path, 'w') as f:
+    #         json.dump(content, f, indent=2)
+    #
+    #
+    # def WriteCell(self, notebookFilename, cellNum, cellContent):
+    #     """
+    #     Only write back a single cell
+    #     """
 
 
 

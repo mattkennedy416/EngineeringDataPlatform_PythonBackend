@@ -7,7 +7,7 @@ def test_loadNotebook():
     localProjectSpace = "~/Documents/EngineeringDataPlatform/ProjectSpace/"
     project = workspace.Project(localProjectSpace, 'testProject')
 
-    notebook = project.ReadNotebook('testNotebook.edpnb')
+    notebook = project.NotebookRead('testNotebook.edpnb')
 
     assert notebook.name() == 'testNotebook'
 
@@ -19,7 +19,7 @@ def test_addNewCell():
     localProjectSpace = "~/Documents/EngineeringDataPlatform/ProjectSpace/"
     project = workspace.Project(localProjectSpace, 'testProject')
 
-    notebook = project.ReadNotebook('testNotebook.edpnb')
+    notebook = project.NotebookRead('testNotebook.edpnb')
 
     confirm = notebook.createNewCellAtEnd(cellType='code', cellSyntax='python')
 

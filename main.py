@@ -143,18 +143,20 @@ def WorkspaceNotebookFiles():
 
 
     if request.method == 'GET':
-        filename = request.args.get('notebookFilename')
+        pathInProject = request.args.get('notebookPath')
 
-        notebook = project.ReadNotebook(filename)
+        notebook = project.NotebookRead(pathInProject)
 
         # # lets do a read all cells operation:
 
         return notebook.toJSON()
 
     elif request.method == 'POST':
-        filename = request.json.get('notebookFilename')
+        pathOnDisk = request.json.get('notebookPath')
+        name = request.json.get('notebookName')
         content = request.json.get('content')
-        project.WriteNotebook(filename, content)
+        #project.WriteNotebook(filename, content)
+        project.NotebookSaveOrSaveAs(pathOnDisk, name, content)
 
         return 'success'
 
