@@ -4,6 +4,9 @@ import datetime
 import uuid
 import json
 from flask import jsonify
+from EngineeringDataPlatform.codingUtilities.notebookCellParser import NotebookCellParser
+
+
 class Notebook:
 
 
@@ -19,6 +22,39 @@ class Notebook:
             self.notebookName = notebookContents['notebookName']
 
         self.project = project
+
+    def executeCells(self, content):
+        # do we need to know which cells? presumably we just saved this content so it should match
+        for cell in content: # could have multiple here, should be a list
+            code = cell['cellContent']
+
+            # for now lets just copy what we were doing previously and make sure we can get our new endpoint working
+
+            interpreterResponse, environmentVariables = self.project.runtime.Execute(code)
+
+            parseForAdditionalInfo = NotebookCellParser(code)
+            for symbol in parseForAdditionalInfo.symbols:
+                if symbol in environmentVariables:  # so we seem to have lost our type data here... that's a problem
+                    pass
+
+            queryResponse = {'type': 'json',
+                             'status': {'state': 'success',
+                                        'msg': ''},
+                             'output': ''}
+
+            if 'msg' in interpreterResponse['info'] and interpreterResponse['info']['msg_type'] == 'error':
+                queryResponse['status']['state'] = 'error'
+                queryResponse['status']['msg'] = interpreterResponse['info']['msg']
+
+            if interpreterResponse['data'] is not None and 'text/plain' in interpreterResponse['data']:
+                queryResponse['output'] = interpreterResponse['data']['text/plain']
+
+            # we can probably figure out how to send back only what's changed
+            queryResponse['environment'] = environmentVariables
+
+            # return json.dumps(queryResponse)
+            return queryResponse
+
 
     def name(self):
         return self.notebookName

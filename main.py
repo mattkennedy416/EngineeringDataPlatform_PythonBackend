@@ -160,6 +160,23 @@ def WorkspaceNotebookFiles():
 
         return 'success'
 
+@app.route('/workspace/notebooks/execute', methods=['POST'])
+def NotebooksExecute():
+    """
+    handle code execution of notebook cells
+
+    lets treat this the same way we treat a partial notebook save operation,
+    but do a save + execute after
+    """
+
+    name = request.json.get('notebookName')
+    content = request.json.get('cellContent')
+
+    if isinstance(content, dict):
+        content = [content]
+
+    queryResponse = project.NotebookCellExecution(name, content)
+    return jsonify(queryResponse)
 
 
 # main driver function

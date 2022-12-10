@@ -9,10 +9,14 @@ import json
 from flask import jsonify
 from EngineeringDataPlatform.workspace.Notebook import Notebook
 
+from CodeExecution.RuntimeTest import RuntimeTest
+
 
 class Project:
 
     def __init__(self, localProjectSpaceDir, projectName):
+
+        self.runtime = RuntimeTest()
 
         self.projectName = projectName
 
@@ -93,17 +97,12 @@ class Project:
         self.loadedNotebooks[name].updateContent(content)
         self.loadedNotebooks[name].save()
 
-    # def WriteNotebook(self, notebookFilename, content):
-    #
-    #     path = os.path.join(self.notebookDir, notebookFilename)
-    #     with open(path, 'w') as f:
-    #         json.dump(content, f, indent=2)
-    #
-    #
-    # def WriteCell(self, notebookFilename, cellNum, cellContent):
-    #     """
-    #     Only write back a single cell
-    #     """
+
+    def NotebookCellExecution(self, name, content):
+
+        self.NotebookSave(name, content)
+        output = self.loadedNotebooks[name].executeCells(content)
+        return output
 
 
 
