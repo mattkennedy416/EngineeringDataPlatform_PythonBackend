@@ -145,11 +145,11 @@ def WorkspaceNotebookFiles():
     if request.method == 'GET':
         filename = request.args.get('notebookFilename')
 
-        content = project.ReadNotebook(filename)
+        notebook = project.ReadNotebook(filename)
 
         # # lets do a read all cells operation:
 
-        return jsonify(content)
+        return notebook.toJSON()
 
     elif request.method == 'POST':
         filename = request.json.get('notebookFilename')
