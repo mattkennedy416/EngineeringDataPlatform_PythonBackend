@@ -32,15 +32,19 @@ class Notebook:
 
             interpreterResponse, environmentVariables = self.project.runtime.Execute(code)
 
+            tablesInCell = []
+
             parseForAdditionalInfo = NotebookCellParser(code)
             for symbol in parseForAdditionalInfo.symbols:
                 if symbol in environmentVariables:  # so we seem to have lost our type data here... that's a problem
-                    pass
+                    if environmentVariables[symbol]['type'] in ['numpy.ndarray', 'list', 'pandas.core.frame.DataFrame']:
+                        tablesInCell.append(symbol)
 
             queryResponse = {'type': 'json',
                              'status': {'state': 'success',
                                         'msg': ''},
-                             'output': ''}
+                             'output': '',
+                             'tablesInCell': tablesInCell}
 
             if 'msg' in interpreterResponse['info'] and interpreterResponse['info']['msg_type'] == 'error':
                 queryResponse['status']['state'] = 'error'

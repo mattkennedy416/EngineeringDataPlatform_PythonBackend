@@ -12,8 +12,8 @@ def cleanEnvironmentVars(varDict):
 
         if key[0] != '_' and key not in ['In', 'Out', 'get_ipython', 'exit', 'quit']:
             #print('including key in output environment variables', key)
-            #output[key] = {'val': str(varDict[key]), 'type': str(type(varDict[key]))}
-            output[key] = str(varDict[key])
+            output[key] = {'val': str(varDict[key]), 'type': str(type(varDict[key]))[8:-2]} # remove the "<class '" and "'>"
+            #output[key] = str(varDict[key])
         else:
             #print('Filtering env var as hidden:', key)
             continue
