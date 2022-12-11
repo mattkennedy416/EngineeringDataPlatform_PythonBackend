@@ -105,6 +105,12 @@ class Project:
         return output
 
 
+    def NotebookInspect(self, name, inspectType, inspectDetails):
+
+        output = self.loadedNotebooks[name].inspect(inspectType, inspectDetails)
+        return output
+
+
 
 
 

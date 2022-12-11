@@ -178,6 +178,32 @@ def NotebooksExecute():
     queryResponse = project.NotebookCellExecution(name, content)
     return jsonify(queryResponse)
 
+@app.route('/workspace/notebooks/inspect', methods=['POST'])
+def NotebooksInspect():
+    """
+    Get detailed views of the data or objects loaded in the underlying Kernel.
+    This should be used for getting data that will be loaded into a table or plot,
+    or getting detailed views of object properties.
+
+    Request should be formatted like:
+    {'notebookName': 'myAwesomeNotebook',
+    'type': 'tableView',
+    'tableView': {'variable': 'a',
+                    'maxRows': -1}
+
+    I don't think we care what cell requested it as long as the info gets back to the right place for rendering.
+    This will be inspecting whatever is currently loaded in the Kernel from any cell.
+    """
+
+    notebookName = request.json.get('notebookName')
+    inspectType = request.json.get('type')
+    inspectDetails = request.json.get(inspectType)
+
+    return jsonify(project.NotebookInspect(notebookName, inspectType, inspectDetails))
+
+
+
+
 
 # main driver function
 if __name__ == '__main__':

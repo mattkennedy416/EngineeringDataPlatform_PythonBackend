@@ -34,11 +34,12 @@ class Notebook:
 
             tablesInCell = []
 
-            parseForAdditionalInfo = NotebookCellParser(code)
-            for symbol in parseForAdditionalInfo.symbols:
-                if symbol in environmentVariables:  # so we seem to have lost our type data here... that's a problem
-                    if environmentVariables[symbol]['type'] in ['numpy.ndarray', 'list', 'pandas.core.frame.DataFrame']:
-                        tablesInCell.append(symbol)
+            if environmentVariables is not None:
+                parseForAdditionalInfo = NotebookCellParser(code)
+                for symbol in parseForAdditionalInfo.symbols:
+                    if symbol in environmentVariables:  # so we seem to have lost our type data here... that's a problem
+                        if environmentVariables[symbol]['type'] in ['numpy.ndarray', 'list', 'pandas.core.frame.DataFrame']:
+                            tablesInCell.append(symbol)
 
             queryResponse = {'type': 'json',
                              'status': {'state': 'success',
@@ -58,6 +59,9 @@ class Notebook:
 
             # return json.dumps(queryResponse)
             return queryResponse
+
+    def inspect(self, inspectType, inspectDetails):
+        print('inspecting!', inspectType, inspectDetails)
 
 
     def name(self):
