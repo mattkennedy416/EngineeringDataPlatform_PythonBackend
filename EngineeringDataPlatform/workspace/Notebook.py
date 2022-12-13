@@ -64,7 +64,8 @@ class Notebook:
         print('inspecting!', inspectType, inspectDetails)
 
         tableData = self.project.runtime.Inspect(inspectType, inspectDetails)
-        print(tableData)
+
+        return tableData
 
 
     def name(self):

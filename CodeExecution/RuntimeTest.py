@@ -115,11 +115,11 @@ class RuntimeTest:
 
         params = {'maxRows': details.get('maxRows', 50),
                   'precision': details.get('precision', 7),
-                  'variable': details.get('variable', None)}
+                  'variable': '"' + details.get('variable', None) + '"'}
 
         paramsStr = ','.join([key+'='+str(params[key]) for key in params])
 
-        text = self._execute_code_blocking(interpreter_id, "BEH.utils.inspect_tableView(vars()," + paramsStr + ")")
+        text = self._execute_code_blocking(interpreter_id, 'BEH.utils.inspect_tableView(vars(),' + paramsStr + ')')
 
         if text['data'] is None and text['info']['msg_type'] =='error':
             return None
