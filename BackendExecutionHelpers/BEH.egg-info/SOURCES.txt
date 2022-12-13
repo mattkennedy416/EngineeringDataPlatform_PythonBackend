@@ -20,3 +20,4 @@ BEH/Workspaces/DataManager.py
 BEH/Workspaces/__init__.py
 BEH/utils/__init__.py
 BEH/utils/execution_utils.py
+BEH/utils/inspect_tableView.py

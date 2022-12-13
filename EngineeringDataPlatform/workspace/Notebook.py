@@ -63,6 +63,9 @@ class Notebook:
     def inspect(self, inspectType, inspectDetails):
         print('inspecting!', inspectType, inspectDetails)
 
+        tableData = self.project.runtime.Inspect(inspectType, inspectDetails)
+        print(tableData)
+
 
     def name(self):
         return self.notebookName

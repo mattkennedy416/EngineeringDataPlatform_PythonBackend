@@ -1,6 +1,7 @@
 
 import json
 import jupyter_client
+import warnings
 
 class RuntimeTest:
 
@@ -75,6 +76,7 @@ class RuntimeTest:
             elif reply_ui['msg_type'] == 'error':
                 info['msg_type'] = 'error'
                 info['msg'] = reply_ui['content'].get('evalue')
+                warnings.warn(info['msg'])
                 break
 
         # so reply_ui is getting the string-wrapped version for printing to the UI... that's not really what we want internally here
@@ -96,6 +98,38 @@ class RuntimeTest:
 
         return interpreter_response, envVariables
 
+    def Inspect(self, inspectType, inspectDetails):
+
+        interpreter_id = 0
+
+        if inspectType == 'tableView':
+            return self._inspect_tableView(interpreter_id, inspectDetails)
+
+    def _inspect_tableView(self, interpreter_id, details):
+        """
+        Format the requested variable into a JSON format that's renderable by a frontend table
+        :param interpreter_id:
+        :return:
+        """
+
+
+        params = {'maxRows': details.get('maxRows', 50),
+                  'precision': details.get('precision', 7),
+                  'variable': details.get('variable', None)}
+
+        paramsStr = ','.join([key+'='+str(params[key]) for key in params])
+
+        text = self._execute_code_blocking(interpreter_id, "BEH.utils.inspect_tableView(vars()," + paramsStr + ")")
+
+        if text['data'] is None and text['info']['msg_type'] =='error':
+            return None
+
+        # also windows filepaths will cause an error with their \ vs /
+        tableData = json.loads(text['data']['text/plain'][1:-1].replace('\\',
+                                                                            '/'))  # for some reason this is like a double string with double quotes around the single quotes? remove the single quotes so we can parse this into a dictionary
+
+        print(tableData)
+        return tableData
 
     def ETL_Load_CSV(self, config):
         """

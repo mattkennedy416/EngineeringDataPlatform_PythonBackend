@@ -20,5 +20,3 @@ def cleanEnvironmentVars(varDict):
 
     return json.dumps(output)
 
-
-
