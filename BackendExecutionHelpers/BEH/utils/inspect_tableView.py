@@ -9,6 +9,8 @@ import pandas as pd
 import json
 
 
+
+
 def inspect_tableView(varDict, variable, maxRows=50, precision=6):
 
 
@@ -24,35 +26,31 @@ def inspect_tableView(varDict, variable, maxRows=50, precision=6):
         headers = ['Col ' + str(n) for n in range(obj.shape[1])]
 
         numRows = np.min((maxRows, obj.shape[0]))
-        rows = list(obj[0:numRows])
+        rows = obj[0:numRows].tolist()
 
     elif isinstance(obj, pd.DataFrame):
-        headers = obj.columns.values
+        headers = obj.columns.values.tolist()
         numRows = np.min((maxRows, obj.shape[0]))
 
-        rows = list(obj.values[0:numRows, :])
+        rows = obj.values[0:numRows, :].tolist()
 
     else:
         raise TypeError('Unknown object type ' + str(type(variable)) + ' cast as np.ndarray, pd.DataFrame, or edp.Table')
 
 
-    # lets assume we convert these to a more universal format where we can build one JSON formatter
+    # format for antd table is:
+    # [{"id": 0, "col0": "c0", "col1": "c1"}, {"id": 1, "col0": "row1", "col1": "row1"}]
+    outputRows = []
+    for rowNum, row in enumerate(rows):
+        reformatted = {"id": rowNum}
+        for colNum, header in enumerate(headers):
+            reformatted[header] = row[colNum]
+        outputRows.append(reformatted)
 
-    rowData = []
-    for m, row in enumerate(rows):
-        rowSingleDict = {"id": str(m)}
-        for n, col in enumerate(headers):
-            rowSingleDict[col.lower()] = str(np.round(row[n], precision)) # convert to string so we don't lose our precision
-        rowData.append(rowSingleDict)
+    return json.dumps({'variable': variable,
+                        'data': outputRows,
+                       'headers': headers})
 
-    headerData = []
-    for col in headers:
-        headerData.append({'key': col.lower(), 'value': col})
 
-    # raise TypeError(json.dumps({'headers': headerData,
-    #                     'rows': rowData}))
-
-    return json.dumps({'headers': headerData,
-                        'rows': rowData})
 
 
